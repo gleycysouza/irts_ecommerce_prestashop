@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import base.BaseTests;
 import pages.CarrinhoPage;
@@ -76,6 +78,41 @@ public class HomePageTests extends BaseTests {
 		
 		carregarPaginaInicial();
 	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "/massaTeste_Login.csv", numLinesToSkip = 1, delimiter = ';')
+	public void testLogin_UsuarioLogadoComDadosValidos(String nomeTeste, String email, String password, String nomeUsuario, String resultado) {
+		//Clicar no botao sign in na homepage
+		loginpage = homePage.clicarBotaoSignIn();
+		
+		//preencher usuario e senha
+		loginpage.preencherEmail(email);
+		loginpage.preencherPassword(password);
+		
+		//clicar no botao sign in para logar
+		loginpage.clicarOBotaoSignIn();
+		
+		boolean esperado_LoginOk;
+		
+		if(resultado.equals("positivo"))
+			esperado_LoginOk = true;
+		else 
+			esperado_LoginOk = false;
+		
+		
+		//validar se o usuário está logado de fato
+		assertThat(homePage.estaLogado(nomeUsuario), is(esperado_LoginOk));
+		
+		capturarTela(nomeTeste, resultado);
+		
+		if(esperado_LoginOk) 
+			homePage.clicarBotaoSignOut();
+		
+		
+		carregarPaginaInicial();
+	}
+	
+	
 	
 	@Test
 	public void testIncluirProdutoNoCarrinho_ProdutoIncluidoComSucesso() {
@@ -155,7 +192,7 @@ public class HomePageTests extends BaseTests {
 	CarrinhoPage carrinhoPage;
 	
 	@Test
-	public void IrParaCarrinho_InformacoesPersistidas() {
+	public void testIrParaCarrinho_InformacoesPersistidas() {
 		//precondicoes
 		//produto incluido na tela modalprodutopage
 		testIncluirProdutoNoCarrinho_ProdutoIncluidoComSucesso();
@@ -205,11 +242,11 @@ public class HomePageTests extends BaseTests {
 	CheckoutPage checkoutPage; 
 	
 	@Test
-	public void IrParaCheckout_FreteMeioPagamentoEnderecoListadosOk() {
+	public void testIrParaCheckout_FreteMeioPagamentoEnderecoListadosOk() {
 		//pre condições
 		
 		//produto escolhido no carrinho de compras
-		IrParaCarrinho_InformacoesPersistidas();
+		testIrParaCarrinho_InformacoesPersistidas();
 		
 		//Teste
 		
@@ -247,10 +284,10 @@ public class HomePageTests extends BaseTests {
 	PedidoPage pedidoPage;
 	
 	@Test
-	public void finalizarPedido_PedidoFinalizadoComSucesso() {
+	public void testFinalizarPedido_PedidoFinalizadoComSucesso() {
 		//precondicoes: checkout concluido
 		
-		IrParaCheckout_FreteMeioPagamentoEnderecoListadosOk();
+		testIrParaCheckout_FreteMeioPagamentoEnderecoListadosOk();
 		
 		//Teste
 		//clicar botao para confirmar pedido

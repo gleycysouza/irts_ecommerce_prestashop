@@ -1,0 +1,3 @@
+nomeTeste;email;password;nomeUsuario;resultado
+loginValido;gleycy@teste.com;gleycy;Gleycy Souza;positivo
+loginInvalido;gleycy@teste.com;gleycy123;Gleycy Souza;negativo

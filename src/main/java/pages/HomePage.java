@@ -18,6 +18,7 @@ public class HomePage {
 	private By precoDosProdutos = By.className("price");
 	private By botaoSignIn = By.cssSelector("#_desktop_user_info span.hidden-sm-down");
 	private By usuarioLogado = By.cssSelector("#_desktop_user_info span.hidden-sm-down");
+	private By botaoSignOut = By.cssSelector("a.logout");
 	
 	public HomePage(WebDriver driver) {
 		this.driver = driver;
@@ -26,6 +27,10 @@ public class HomePage {
 	public int contarProdutos() {
 		carregarListaProdutos();
 		return listaProdutos.size();
+	}
+	
+	public void carregarPaginaInicial() {
+		driver.get("https://marcelodebittencourt.com/demoprestashop/");	
 	}
 	
 	private void carregarListaProdutos() {
@@ -60,7 +65,21 @@ public class HomePage {
 	}
 	
 	public boolean estaLogado (String texto){
-		//contentEquals retorna um boolean se os textos são iguais
+		//contentEquals retorna um boolean se os textos sï¿½o iguais
 		return texto.contentEquals(driver.findElement(usuarioLogado).getText());
 	}
+	
+	public void clicarBotaoSignOut() {
+		driver.findElement(botaoSignOut).click();
+	}
+
+	public String obterTituloPagina() {
+		return driver.getTitle();
+	}
+
+	public boolean estaLogado() {
+		String texto = "Sign in";
+		return !texto.contentEquals(driver.findElement(usuarioLogado).getText());		
+	}
+
 }
